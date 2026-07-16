@@ -5,6 +5,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from antarr_demo import auth_views
 from search import views as search_views
 
 urlpatterns = [
@@ -12,6 +13,10 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    # WorkOS AuthKit authentication routes
+    path("auth/login/", auth_views.login_view, name="workos_login"),
+    path("auth/callback/", auth_views.callback_view, name="workos_callback"),
+    path("auth/logout/", auth_views.logout_view, name="workos_logout"),
 ]
 
 

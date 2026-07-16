@@ -34,6 +34,19 @@
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
+        {# WorkOS AuthKit user bar #}
+        <div style="background: #f5f5f5; padding: 10px 20px; text-align: right; border-bottom: 1px solid #ddd;">
+            {% if request.session.workos_user %}
+                <span style="margin-right: 15px;">
+                    Welcome, {{ request.session.workos_user.first_name }} {{ request.session.workos_user.last_name }}
+                    ({{ request.session.workos_user.email }})
+                </span>
+                <a href="{% url 'workos_logout' %}" style="color: #333; text-decoration: underline;">Logout</a>
+            {% else %}
+                <a href="{% url 'workos_login' %}" style="color: #333; text-decoration: underline;">Login with AuthKit</a>
+            {% endif %}
+        </div>
+
         {% block content %}{% endblock %}
 
         {# Global javascript #}
