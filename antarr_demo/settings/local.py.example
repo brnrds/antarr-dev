@@ -1,0 +1,20 @@
+"""
+Copy to local.py for machine-specific settings (never commit local.py).
+
+Wagtail recommends keeping secrets here on production servers:
+https://docs.wagtail.org/en/stable/reference/project_template.html
+"""
+
+# SECRET_KEY = "your-production-secret-key"
+# ALLOWED_HOSTS = ["example.com", "www.example.com"]
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "antarr_demo",
+#         "USER": "antarr_demo",
+#         "PASSWORD": "change-me",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
