@@ -1,0 +1,12 @@
+{% extends "portal/base_portal.html" %}
+{% load static %}
+{% block title %}Fotografias{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="page-kicker">Evolução no terreno</p><h1>Fotografias</h1><p>Acompanhe a transformação das parcelas ao longo do tempo.</p></div><button class="portal-button portal-button--secondary" type="button">Ver timelapse ⏵</button></div>
+{% if current_process %}
+<nav class="filter-bar"><a class="filter-chip {% if not selected_parcel %}is-active{% endif %}" href="?process={{ current_process.pk }}">Todas as parcelas</a>{% for label in parcel_labels %}<a class="filter-chip {% if selected_parcel == label %}is-active{% endif %}" href="?process={{ current_process.pk }}&parcel={{ label|urlencode }}">{{ label }}</a>{% endfor %}</nav>
+<section class="photo-grid">
+{% for photo in photos %}<article class="photo-card portal-card"><div class="photo-image" style="background-image: linear-gradient(0deg, rgb(11 35 28 / 35%), transparent), url('{% url 'portal:photo_image' photo.pk %}'); background-position: {% cycle 'right center' 'center center' '65% center' %};"><span class="tag">{{ photo.parcel_label|default:"Parcela" }}</span></div><div class="photo-meta"><div><strong>{{ photo.caption|default:"Registo de acompanhamento" }}</strong><span>{{ photo.captured_at|date:"d M Y" }}</span></div><a href="{% url 'portal:photo_image' photo.pk %}" aria-label="Ampliar fotografia">↗</a></div></article>{% empty %}<div class="portal-card empty-state photo-empty"><div><span class="empty-state-icon">▧</span><h2>A galeria começa com a primeira visita</h2><p>As fotografias recolhidas no terreno aparecerão aqui por ordem cronológica.</p></div></div>{% endfor %}
+</section>
+{% else %}{% include "portal/_no_process.html" %}{% endif %}
+{% endblock %}

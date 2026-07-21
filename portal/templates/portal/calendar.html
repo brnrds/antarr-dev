@@ -1,0 +1,14 @@
+{% extends "portal/base_portal.html" %}
+{% block title %}Calendário{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="page-kicker">Planeamento</p><h1>Calendário</h1><p>Operações previstas e datas importantes do seu processo.</p></div><span class="today-chip">Hoje · {{ today|date:"d M Y" }}</span></div>
+{% if current_process %}
+<section class="calendar-layout">
+    <div class="calendar-main">
+        <h2 class="section-label">Próximas operações</h2>
+        {% for op in upcoming_operations %}<article class="operation-card portal-card"><time><strong>{{ op.scheduled_start|date:"d" }}</strong><span>{{ op.scheduled_start|date:"M"|upper }}</span></time><div><div class="operation-tags"><span class="tag {% if op.status == 'confirmed' %}tag--blue{% else %}tag--amber{% endif %}">{{ op.get_status_display }}</span>{% if op.scheduled_end %}<small>{{ op.scheduled_start|date:"d M" }} — {{ op.scheduled_end|date:"d M Y" }}</small>{% endif %}</div><h3>{{ op.title }}</h3><p>{{ op.description|default:"Detalhes da operação serão confirmados pela equipa Antarr." }}</p><small class="location-line">⌖ {{ op.location_notes|default:current_process.location }}</small></div></article>{% empty %}<div class="portal-card mini-empty large">Não existem operações futuras agendadas.</div>{% endfor %}
+    </div>
+    <aside class="calendar-aside portal-card"><p class="page-kicker">Legenda</p><h2>Estado das operações</h2><p><i class="legend-dot legend-dot--green"></i> Confirmada</p><p><i class="legend-dot legend-dot--amber"></i> Planeada</p><p><i class="legend-dot legend-dot--grey"></i> Concluída</p><hr><small>As datas podem sofrer alterações devido às condições meteorológicas ou operacionais. Será sempre notificado.</small></aside>
+</section>
+{% else %}{% include "portal/_no_process.html" %}{% endif %}
+{% endblock %}

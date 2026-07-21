@@ -17,6 +17,8 @@ urlpatterns = [
     path("auth/login/", auth_views.login_view, name="workos_login"),
     path("auth/callback/", auth_views.callback_view, name="workos_callback"),
     path("auth/logout/", auth_views.logout_view, name="workos_logout"),
+    # Senhorios client area (area.antarr.pt target)
+    path("portal/", include("portal.urls")),
 ]
 
 

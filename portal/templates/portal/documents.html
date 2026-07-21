@@ -1,0 +1,13 @@
+{% extends "portal/base_portal.html" %}
+{% block title %}Documentos{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="page-kicker">Arquivo digital</p><h1>Documentos</h1><p>Contratos, planos, relatórios e faturação do seu processo.</p></div></div>
+{% if current_process %}
+<nav class="filter-bar" aria-label="Filtrar documentos"><a class="filter-chip {% if not selected_type %}is-active{% endif %}" href="?process={{ current_process.pk }}">Todos</a>{% for value, label in document_types %}<a class="filter-chip {% if selected_type == value %}is-active{% endif %}" href="?process={{ current_process.pk }}&type={{ value }}">{{ label }}</a>{% endfor %}</nav>
+<section class="portal-card table-card">
+    <div class="document-table table-head"><span>Documento</span><span>Tipo</span><span>Publicado</span><span>Tamanho</span><span></span></div>
+    {% for doc in documents %}<article class="document-table"><div class="document-name"><span class="file-icon">PDF</span><div><strong>{{ doc.title }}</strong><small>{{ current_process.reference_code }}</small></div></div><span><i class="tag tag--blue">{{ doc.get_document_type_display }}</i></span><time>{{ doc.published_at|date:"d M Y" }}</time><span>{{ doc.file_size_bytes|filesizeformat }}</span><a class="download-link" href="{% url 'portal:document_download' doc.pk %}" aria-label="Descarregar {{ doc.title }}">↓</a></article>{% empty %}<div class="empty-state"><div><span class="empty-state-icon">▱</span><h2>Sem documentos nesta categoria</h2><p>Quando a equipa publicar um documento, ficará disponível aqui e receberá um aviso por email.</p></div></div>{% endfor %}
+</section>
+<p class="security-note">◈ Os ficheiros são privados. Cada acesso fica registado e a ligação de descarga expira automaticamente.</p>
+{% else %}{% include "portal/_no_process.html" %}{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "portal/base_portal.html" %}
+{% block title %}Mensagens{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="page-kicker">Comunicação direta</p><h1>Mensagens</h1><p>Fale com o gestor responsável pelo seu processo.</p></div></div>
+{% if current_process %}
+<section class="messages-layout portal-card">
+    <aside class="thread-list"><div class="thread-list-head"><strong>Conversas</strong><button type="button" aria-label="Nova conversa">＋</button></div>{% for thread in threads %}<a class="thread-item {% if active_thread.pk == thread.pk %}is-active{% endif %}" href="?process={{ current_process.pk }}&thread={{ thread.pk }}"><span class="thread-avatar">A</span><span><strong>{{ thread.subject }}</strong><small>{{ thread.messages.last.body|truncatechars:42 }}</small></span><time>{{ thread.updated_at|date:"d M" }}</time></a>{% empty %}<p class="thread-empty">Ainda não há conversas. Envie a primeira mensagem à equipa.</p>{% endfor %}</aside>
+    <div class="conversation">
+        {% if active_thread %}<header class="conversation-head"><span class="thread-avatar thread-avatar--large">{{ current_process.manager.first_name|default:"A"|slice:":1" }}</span><div><strong>{{ active_thread.subject }}</strong><small>{{ current_process.manager.get_full_name|default:"Equipa Antarr" }} · Gestor do processo</small></div></header><div class="message-stream">{% for item in active_thread.messages.all %}<article class="message-bubble {% if item.author_id == portal_user.pk %}message-bubble--mine{% endif %}"><p>{{ item.body|linebreaksbr }}</p><time>{{ item.created_at|date:"d M, H:i" }}</time></article>{% endfor %}</div>{% else %}<div class="message-stream message-stream--empty"><div><span class="empty-state-icon">✉</span><h2>Comece uma conversa</h2><p>A equipa responde normalmente no prazo de um dia útil.</p></div></div>{% endif %}
+        <form class="message-compose" method="post" action="{% url 'portal:send_message' %}">{% csrf_token %}<input type="hidden" name="process" value="{{ current_process.pk }}">{% if active_thread %}<input type="hidden" name="thread" value="{{ active_thread.pk }}">{% else %}<label class="sr-only" for="subject">Assunto</label><input id="subject" name="subject" placeholder="Assunto da conversa" required>{% endif %}<label class="sr-only" for="body">Mensagem</label><textarea id="body" name="body" rows="2" placeholder="Escreva uma mensagem..." required></textarea><button type="submit" aria-label="Enviar mensagem">→</button></form>
+    </div>
+</section>
+{% else %}{% include "portal/_no_process.html" %}{% endif %}
+{% endblock %}

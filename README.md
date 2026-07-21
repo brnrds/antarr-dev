@@ -55,6 +55,24 @@ uv run python manage.py runserver
 
 - Site: http://localhost:8000
 - Admin: http://localhost:8000/admin/
+- Landlord portal: http://localhost:8000/portal/
+
+### Portal demo data
+
+The portal is tenant-scoped through `ProcessMembership`. To create a realistic,
+idempotent dataset for a local AuthKit user, run:
+
+```bash
+uv run python manage.py seed_portal_demo --email you@example.com
+```
+
+Use the same email address to sign into AuthKit. The command creates one managed
+property, documents, interventions, planned operations, parcel photographs and a
+message thread. It never grants portal access automatically during sign-in.
+
+The institutional homepage and editorial `ArticlePage` content are managed in
+Wagtail at `/admin/`; process operations are managed in Django's backoffice at
+`/django-admin/`.
 
 ## Settings
 
@@ -111,3 +129,22 @@ docker run -p 8000:8000 \
 | Python  | 3.12+   |
 | Django  | 6.x     |
 | Wagtail | 7.3.x   |
+
+## Security and data handling
+
+- Every portal queryset is filtered through the authenticated user's process
+  membership; staff users can access all active processes through the backoffice.
+- Sensitive documents live outside the public media directory. Downloads use a
+  15-minute signed endpoint and create an `AccessLog` record before access.
+- AuthKit identities are linked to Django users at callback time, while process
+  access remains an explicit backoffice action.
+- Production settings enable HTTPS redirect, HSTS, secure cookies, SameSite
+  protection, clickjacking protection and MIME sniffing protection.
+- New documents, operations and messages trigger email after the database
+  transaction commits, while respecting preferences per user and per process.
+
+For production, replace the local `PrivateObjectStorage` adapter with an
+S3-compatible private bucket implementation while retaining the same signed URL
+interface. Database and object-storage backups should use separate locations and
+an operations-level retention policy; they are intentionally not emulated by the
+application process.

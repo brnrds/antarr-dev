@@ -1,0 +1,36 @@
+{% extends "portal/base_portal.html" %}
+{% block title %}Visão geral{% endblock %}
+{% block content %}
+<div class="page-head dashboard-head"><div><p class="page-kicker">Visão geral</p><h1>Bom dia, {{ display_name }}.</h1><p>Acompanhe o estado da sua propriedade e as novidades do processo.</p></div>{% if current_process %}<span class="tag">{{ current_process.get_status_display }}</span>{% endif %}</div>
+
+{% if current_process %}
+<section class="process-hero portal-card">
+    <div class="process-hero-copy">
+        <div><p class="page-kicker">Processo {{ current_process.reference_code }}</p><h2>{{ current_process.name }}</h2><p>{{ current_process.location|default:"Localização em atualização" }}{% if current_process.area_hectares %} · {{ current_process.area_hectares }} hectares{% endif %}</p></div>
+        <div class="progress-block"><span>Progresso global</span><strong>{{ current_process.progress_percent }}%</strong><div class="progress-track"><i style="width: {{ current_process.progress_percent }}%"></i></div></div>
+    </div>
+    <div class="process-hero-image"><span>Propriedade acompanhada<br>pela equipa Antarr</span></div>
+</section>
+
+<section class="stats-grid" aria-label="Resumo do processo">
+    <a class="stat-card portal-card" href="{% url 'portal:documents' %}?process={{ current_process.pk }}"><span>Documentos</span><strong>{{ stats.documents|stringformat:"02d" }}</strong><small>Consulte o arquivo →</small></a>
+    <a class="stat-card portal-card" href="{% url 'portal:photos' %}?process={{ current_process.pk }}"><span>Fotografias</span><strong>{{ stats.photos|stringformat:"02d" }}</strong><small>Ver evolução →</small></a>
+    <a class="stat-card portal-card" href="{% url 'portal:interventions' %}?process={{ current_process.pk }}"><span>Intervenções</span><strong>{{ stats.interventions|stringformat:"02d" }}</strong><small>Ver histórico →</small></a>
+    <a class="stat-card portal-card stat-card--accent" href="{% url 'portal:calendar' %}?process={{ current_process.pk }}"><span>Próximas operações</span><strong>{{ stats.upcoming|stringformat:"02d" }}</strong><small>Consultar calendário →</small></a>
+</section>
+
+<div class="dashboard-grid">
+    <section class="portal-card panel">
+        <div class="panel-head"><div><p class="page-kicker">Agenda</p><h2>Próxima operação</h2></div><a href="{% url 'portal:calendar' %}?process={{ current_process.pk }}">Ver calendário →</a></div>
+        {% if upcoming_operation %}<div class="next-operation"><time datetime="{{ upcoming_operation.scheduled_start|date:'Y-m-d' }}"><strong>{{ upcoming_operation.scheduled_start|date:"d" }}</strong><span>{{ upcoming_operation.scheduled_start|date:"M"|upper }}</span></time><div><span class="tag tag--amber">{{ upcoming_operation.get_status_display }}</span><h3>{{ upcoming_operation.title }}</h3><p>{{ upcoming_operation.location_notes|default:current_process.location }}</p></div></div>{% else %}<div class="mini-empty">Ainda não existem operações agendadas.</div>{% endif %}
+    </section>
+    <section class="portal-card panel">
+        <div class="panel-head"><div><p class="page-kicker">Atualizações</p><h2>Atividade recente</h2></div></div>
+        <div class="activity-list">{% for date, kind, item in recent_activity %}<div class="activity-row"><span class="activity-icon">{% if kind == 'document' %}▱{% else %}⌁{% endif %}</span><div><strong>{{ item.title }}</strong><small>{% if kind == 'document' %}Novo documento{% else %}Intervenção realizada{% endif %} · {{ date|date:"d M Y" }}</small></div></div>{% empty %}<div class="mini-empty">Sem atividade recente.</div>{% endfor %}</div>
+    </section>
+</div>
+
+{% else %}
+<section class="portal-card empty-state"><div><span class="empty-state-icon">⌁</span><h2>A sua conta está pronta</h2><p>Ainda não existe um processo associado a este utilizador. A equipa Antarr foi notificada e fará a associação em breve.</p></div></section>
+{% endif %}
+{% endblock %}

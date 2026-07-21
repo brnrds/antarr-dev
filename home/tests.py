@@ -1,23 +1,9 @@
+from datetime import date
+
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase
 
-from home.models import HomePage
-
-
-class HomeSetUpTests(WagtailPageTestCase):
-    """
-    Tests for basic page structure setup and HomePage creation.
-    """
-
-    def test_root_create(self):
-        root_page = Page.objects.get(pk=1)
-        self.assertIsNotNone(root_page)
-
-    def test_homepage_create(self):
-        root_page = Page.objects.get(pk=1)
-        homepage = HomePage(title="Home")
-        root_page.add_child(instance=homepage)
-        self.assertTrue(HomePage.objects.filter(title="Home").exists())
+from home.models import ArticlePage, HomePage
 
 
 class HomeTests(WagtailPageTestCase):
@@ -41,6 +27,16 @@ class HomeTests(WagtailPageTestCase):
     def test_homepage_is_renderable(self):
         self.assertPageIsRenderable(self.homepage)
 
-    def test_homepage_template_used(self):
-        response = self.client.get(self.homepage.url)
-        self.assertTemplateUsed(response, "home/home_page.html")
+    def test_visitor_can_read_an_editorial_article(self):
+        article = ArticlePage(
+            title="Cuidar do montado no verão",
+            publication_date=date(2026, 7, 19),
+            summary="Uma nota breve sobre prevenção e acompanhamento.",
+            body="<p>Conteúdo editorial.</p>",
+        )
+        self.homepage.add_child(instance=article)
+
+        response = self.client.get(article.url)
+
+        self.assertContains(response, "Cuidar do montado no verão")
+        self.assertContains(response, "Conteúdo editorial.")

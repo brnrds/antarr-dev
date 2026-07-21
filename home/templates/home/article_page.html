@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}public-site article-site{% endblock %}
+{% block content %}
+<header class="article-header">
+    <a class="brand brand--light" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span class="brand-word">antarr</span></a>
+    <a href="/" class="article-back">← Voltar ao início</a>
+</header>
+<main id="main-content">
+    <article class="article-page">
+        <header class="article-lead shell"><p class="eyebrow">Notas do terreno · {{ page.publication_date|date:"d M Y" }}</p><h1>{{ page.title }}</h1><p>{{ page.summary }}</p></header>
+        {% if page.hero_image %}{% image page.hero_image fill-1600x800 as hero %}<div class="article-hero shell"><img src="{{ hero.url }}" alt=""></div>{% endif %}
+        <div class="article-body">{{ page.body|richtext }}</div>
+    </article>
+</main>
+<footer class="article-footer"><div class="shell"><a class="brand brand--light" href="/"><span class="brand-mark"><i></i><i></i><i></i></span><span class="brand-word">antarr</span></a><a href="mailto:geral@antarr.pt">geral@antarr.pt ↗</a></div></footer>
+{% endblock %}

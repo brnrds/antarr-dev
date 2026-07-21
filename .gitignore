@@ -12,6 +12,7 @@ wheels/
 # Django / Wagtail
 db.sqlite3
 /media/
+/private-media/
 /static/
 
 # Environment and secrets

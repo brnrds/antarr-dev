@@ -1,0 +1,10 @@
+{% extends "portal/base_portal.html" %}
+{% block title %}Intervenções{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="page-kicker">Trabalho realizado</p><h1>Intervenções</h1><p>O histórico completo das operações executadas no terreno.</p></div></div>
+{% if current_process %}
+<section class="timeline portal-card">
+{% for item in interventions %}<article class="timeline-row"><div class="timeline-date"><strong>{{ item.performed_at|date:"d" }}</strong><span>{{ item.performed_at|date:"M Y"|upper }}</span></div><span class="timeline-dot"></span><div class="timeline-copy"><span class="tag">{{ item.get_intervention_type_display }}</span><h2>{{ item.title }}</h2><p>{{ item.description|default:"Intervenção registada pela equipa de gestão." }}</p></div><span class="timeline-status">Concluída ✓</span></article>{% empty %}<div class="empty-state"><div><span class="empty-state-icon">⌁</span><h2>Ainda sem intervenções</h2><p>O histórico será atualizado após a primeira operação no terreno.</p></div></div>{% endfor %}
+</section>
+{% else %}{% include "portal/_no_process.html" %}{% endif %}
+{% endblock %}

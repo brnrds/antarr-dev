@@ -1,59 +1,21 @@
 {% load static wagtailcore_tags wagtailuserbar %}
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-            {% endblock %}
-        </title>
-        {% if page.search_description %}
-        <meta name="description" content="{{ page.search_description }}" />
-        {% endif %}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        {# Force all links in the live preview panel to be opened in a new tab #}
-        {% if request.in_preview_panel %}
-        <base target="_blank">
-        {% endif %}
-
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/antarr_demo.css' %}">
-
-        {% block extra_css %}
-        {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
-    </head>
-
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
-
-        {# WorkOS AuthKit user bar #}
-        <div style="background: #f5f5f5; padding: 10px 20px; text-align: right; border-bottom: 1px solid #ddd;">
-            {% if request.session.workos_user %}
-                <span style="margin-right: 15px;">
-                    Welcome, {{ request.session.workos_user.first_name }} {{ request.session.workos_user.last_name }}
-                    ({{ request.session.workos_user.email }})
-                </span>
-                <a href="{% url 'workos_logout' %}" style="color: #333; text-decoration: underline;">Logout</a>
-            {% else %}
-                <a href="{% url 'workos_login' %}" style="color: #333; text-decoration: underline;">Login with AuthKit</a>
-            {% endif %}
-        </div>
-
-        {% block content %}{% endblock %}
-
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/antarr_demo.js' %}"></script>
-
-        {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
+<!doctype html>
+<html lang="pt-PT">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#17382d">
+    <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% elif page %}{{ page.title }}{% else %}Antarr{% endif %}{% endblock %}{% block title_suffix %} — Antarr{% endblock %}</title>
+    {% if page.search_description %}<meta name="description" content="{{ page.search_description }}">{% endif %}
+    {% if request.in_preview_panel %}<base target="_blank">{% endif %}
+    <link rel="stylesheet" href="{% static 'css/antarr_demo.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <a class="skip-link" href="#main-content">Saltar para o conteúdo</a>
+    {% wagtailuserbar %}
+    {% block content %}{% endblock %}
+    <script src="{% static 'js/antarr_demo.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
 </html>

@@ -32,6 +32,7 @@ BASE_DIR = PROJECT_DIR.parent
 INSTALLED_APPS = [
     "home.apps.HomeConfig",
     "search.apps.SearchConfig",
+    "portal.apps.PortalConfig",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -121,9 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "pt-pt"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Lisbon"
 
 USE_I18N = True
 
@@ -147,6 +148,7 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+PRIVATE_MEDIA_ROOT = BASE_DIR / "private-media"
 
 # Default storage settings
 # See https://docs.djangoproject.com/en/6.0/ref/settings/#std-setting-STORAGES
@@ -184,9 +186,28 @@ WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 # This can be omitted to allow all files, but note that this may present a security risk
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+WAGTAILDOCS_EXTENSIONS = [
+    "csv",
+    "docx",
+    "key",
+    "odt",
+    "pdf",
+    "pptx",
+    "rtf",
+    "txt",
+    "xlsx",
+    "zip",
+]
 
 
 # WorkOS AuthKit settings
 WORKOS_API_KEY = os.environ.get("WORKOS_API_KEY")
 WORKOS_CLIENT_ID = os.environ.get("WORKOS_CLIENT_ID")
+
+# Browser-session hardening. Production serves HTTPS and overrides the one
+# development-safe cookie flag below.
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = 60 * 60 * 8
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Antarr <noreply@antarr.pt>")

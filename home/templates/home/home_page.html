@@ -1,21 +1,132 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
-{% block body_class %}template-homepage{% endblock %}
-
-{% block extra_css %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
-{% endblock extra_css %}
+{% block body_class %}public-site{% endblock %}
 
 {% block content %}
+<header class="site-header" data-site-header>
+    <a class="brand brand--light" href="#top" aria-label="Antarr — início">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-word">antarr</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+        <span></span><span></span><span></span><span class="sr-only">Abrir menu</span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Navegação principal" data-site-nav>
+        <a href="#abordagem">A nossa abordagem</a>
+        <a href="#servicos">O que fazemos</a>
+        <a href="#contacto">Contactos</a>
+        <a class="button button--outline-light" href="{% url 'portal:dashboard' %}">Área de senhorios <span aria-hidden="true">↗</span></a>
+    </nav>
+</header>
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-{% include 'home/welcome_page.html' %}
+<main id="main-content">
+    <section class="hero" id="top" style="--hero-image: url('{% static 'images/antarr-montado-hero.png' %}')">
+        <div class="hero-shade"></div>
+        <div class="hero-content shell">
+            <p class="eyebrow eyebrow--light">{{ page.hero_eyebrow }}</p>
+            <h1>{{ page.hero_title }}</h1>
+            <p class="hero-intro">{{ page.hero_intro }}</p>
+            <div class="hero-actions">
+                <a class="button button--cream" href="#contacto">Fale connosco <span aria-hidden="true">→</span></a>
+                <a class="text-link text-link--light" href="#abordagem">Conheça a nossa abordagem <span aria-hidden="true">↓</span></a>
+            </div>
+        </div>
+        <div class="hero-foot shell" aria-label="Princípios Antarr">
+            <span>01 <strong>Proximidade</strong></span>
+            <span>02 <strong>Transparência</strong></span>
+            <span>03 <strong>Impacto duradouro</strong></span>
+        </div>
+    </section>
 
-{% endblock content %}
+    <section class="intro-section section" id="abordagem">
+        <div class="shell intro-grid">
+            <div>
+                <p class="eyebrow">A nossa abordagem</p>
+                <h2>{{ page.approach_title }}</h2>
+            </div>
+            <div class="rich-copy">
+                {{ page.approach_body|richtext }}
+                <a class="text-link" href="#servicos">Como trabalhamos <span aria-hidden="true">→</span></a>
+            </div>
+        </div>
+        <div class="shell values-grid">
+            <article class="value-card">
+                <span class="line-icon" aria-hidden="true">⌁</span>
+                <p class="card-number">01</p>
+                <h3>Conhecer</h3>
+                <p>Começamos por compreender a propriedade, os objetivos e a realidade de quem confia em nós.</p>
+            </article>
+            <article class="value-card value-card--accent">
+                <span class="line-icon" aria-hidden="true">⌘</span>
+                <p class="card-number">02</p>
+                <h3>Planear</h3>
+                <p>Transformamos informação técnica num plano claro, responsável e alinhado com o longo prazo.</p>
+            </article>
+            <article class="value-card">
+                <span class="line-icon" aria-hidden="true">↗</span>
+                <p class="card-number">03</p>
+                <h3>Acompanhar</h3>
+                <p>Partilhamos cada etapa e mantemos a documentação, o calendário e a evolução sempre acessíveis.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="services-section section" id="servicos">
+        <div class="shell section-heading">
+            <p class="eyebrow eyebrow--light">O que fazemos</p>
+            <h2>Da estratégia à execução,<br>uma gestão completa.</h2>
+        </div>
+        <div class="shell services-list">
+            <article><span>01</span><h3>Diagnóstico e planeamento</h3><p>Levantamento da propriedade, objetivos e oportunidades para definir um plano de gestão sólido.</p></article>
+            <article><span>02</span><h3>Gestão de operações</h3><p>Coordenação das intervenções no terreno com equipas especializadas e acompanhamento contínuo.</p></article>
+            <article><span>03</span><h3>Valorização e transparência</h3><p>Documentação centralizada, controlo financeiro e comunicação simples em todas as fases.</p></article>
+        </div>
+    </section>
+
+    <section class="portal-callout section">
+        <div class="shell portal-callout-grid">
+            <div>
+                <p class="eyebrow">Sempre perto, mesmo à distância</p>
+                <h2>A sua propriedade,<br>na palma da mão.</h2>
+                <p>Acompanhe documentos, fotografias, intervenções e próximas operações através da sua área reservada.</p>
+                <a class="button button--dark" href="{% url 'portal:dashboard' %}">Entrar na área de senhorios <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="portal-preview" aria-hidden="true">
+                <div class="preview-window">
+                    <div class="preview-top"><span class="brand-mark brand-mark--small"><i></i><i></i><i></i></span><b>O seu processo</b><i></i></div>
+                    <div class="preview-body">
+                        <small>PROGRESSO GLOBAL</small><strong>68%</strong>
+                        <div class="preview-progress"><i></i></div>
+                        <div class="preview-row"><span>Próxima operação</span><b>Limpeza de mato · 24 Jul</b></div>
+                        <div class="preview-cards"><i></i><i></i><i></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if latest_articles %}
+    <section class="journal-section section" id="atualidade">
+        <div class="shell journal-heading"><div><p class="eyebrow">Notas do terreno</p><h2>Conhecimento que<br>queremos partilhar.</h2></div></div>
+        <div class="shell journal-grid">{% for article in latest_articles %}<article class="journal-card">{% if article.hero_image %}{% image article.hero_image fill-700x430 as article_image %}<a href="{% pageurl article %}" class="journal-image"><img src="{{ article_image.url }}" alt=""></a>{% endif %}<p>{{ article.publication_date|date:"d M Y" }}</p><h3><a href="{% pageurl article %}">{{ article.title }}</a></h3><div>{{ article.summary }}</div><a class="text-link" href="{% pageurl article %}">Ler artigo <span>→</span></a></article>{% endfor %}</div>
+    </section>
+    {% endif %}
+
+    <section class="contact-section section" id="contacto">
+        <div class="shell contact-grid">
+            <div><p class="eyebrow">Vamos conversar</p><h2>Uma boa gestão começa com uma boa conversa.</h2></div>
+            <div><p>Conte-nos um pouco sobre a sua propriedade e os seus objetivos. Respondemos de forma simples, sem compromisso.</p><a class="contact-email" href="mailto:{{ page.contact_email }}">{{ page.contact_email }} <span aria-hidden="true">↗</span></a></div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="shell footer-grid">
+        <a class="brand brand--light" href="#top"><span class="brand-mark"><i></i><i></i><i></i></span><span class="brand-word">antarr</span></a>
+        <p>Gestão florestal responsável,<br>próxima e transparente.</p>
+        <nav aria-label="Navegação de rodapé"><a href="#abordagem">Abordagem</a><a href="#servicos">Serviços</a><a href="#atualidade">Atualidade</a><a href="#contacto">Contactos</a><a href="{% url 'portal:dashboard' %}">Área de senhorios</a></nav>
+    </div>
+    <div class="shell footer-meta"><span>© {% now "Y" %} Antarr. Todos os direitos reservados.</span><span><a href="#">Privacidade</a><a href="#">Termos</a></span></div>
+</footer>
+{% endblock %}

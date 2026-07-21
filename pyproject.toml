@@ -33,4 +33,4 @@ select = ["E", "F", "I", "UP"]
 "**/migrations/*.py" = ["E501"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["antarr_demo", "home", "search"]
+known-first-party = ["antarr_demo", "home", "search", "portal"]
